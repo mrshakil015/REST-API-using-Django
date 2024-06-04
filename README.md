@@ -101,4 +101,27 @@ If we want we can inspect all the fields in a serializer instance.
         obj.delete()
         ```
 
+## Django views using Serializer class into Web:
 
+### View API data using `JsonResponse`:
++ Edit `views.py` and import required packages:
+    ```python
+    from django.shortcuts import render
+    from django.http import HttpResponse, JsonResponse
+    from django.views.decorators.csrf import csrf_exempt
+    from rest_framework.parsers import JSONParser
+    ```
++ Import `serializers` and `models` from `restApiApp`:
+    ```python
+    from restApiApp.serializers import StudentSerializer
+    from restApiApp.models import studentModel
+    ```
++ Create data view function:
+    ```python
+    @csrf_exempt
+    def student_list(request):
+        if request.method == 'GET':
+            objs = studentModel.objects.all()
+            serializer = studentModelSerialize(objs, many=True)
+            return JsonResponse(serializer.data, safe=False)
+    ```
