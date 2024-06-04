@@ -1,5 +1,7 @@
 from .models import studentModel
 from .serializers import StudentSerializer
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication,TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import mixins
 from rest_framework import generics
 
@@ -9,6 +11,10 @@ class stuListMixins(mixins.ListModelMixin,
     
     queryset = studentModel.objects.all()
     serializer_class = StudentSerializer
+    #-----------Token------------
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return self.list(request)
