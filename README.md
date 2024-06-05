@@ -125,3 +125,45 @@ If we want we can inspect all the fields in a serializer instance.
             serializer = studentModelSerialize(objs, many=True)
             return JsonResponse(serializer.data, safe=False)
     ```
+
++ Create url into the `urls.py`:
+
+    ```python
+    from django.contrib import admin
+    from django.urls import path
+    from RestApiApp2.views import student_list
+    from RestApiApp2.apiviews import studentModel
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('list/',student_list),
+    ]
+    ```
+        
+    + Import `student_list` function from `views.py` and import `studentModel` from `models.py`.
+
++ Create another data view function for view the individual data using primary key:
+    ```python
+    @csrf_exempt
+    def student_detail(request, pk):
+        try:
+            student = studentModel.objects.get(pk=pk)
+        except studentModel.DoesNotExist:
+            return HttpResponse(status=404)
+
+        if request.method == 'GET':
+            serializer = studentModelSerialize(student)
+            return JsonResponse(serializer.data)
+    ```
++ Create url into the `urls.py`:
+    ```python
+    ...............
+    ...............
+    from RestApiApp2.views import student_detail
+
+    urlpatterns = [
+        .............
+        .............
+        path('student_detail/<int:pk>/',student_detail),
+    ]
+    ```

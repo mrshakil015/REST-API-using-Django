@@ -15,6 +15,29 @@ def student_list(request):
         return JsonResponse(serializer.data, safe=False)
     
 @csrf_exempt
+def student_detail(request, pk):
+    try:
+        snippet = studentModel.objects.get(pk=pk)
+    except studentModel.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = studentModelSerialize(snippet)
+        return JsonResponse(serializer.data)
+    
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = studentModelSerialize(snippet, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        snippet.delete()
+        return HttpResponse(status=204)
+    
+@csrf_exempt
 def teacher_list(request):
     if request.method == 'GET':
         tobjs = teacherModel.objects.all()
