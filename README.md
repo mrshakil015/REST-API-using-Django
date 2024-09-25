@@ -1,5 +1,13 @@
 # Django REST-API
 
+<details>
+<summary>Serializer</summary>
+
+## What is Serializer?
+Serializer allow complex data such as querysets and model instances to be converted to natvie python datatypes that can then be easily rendered into JSON, XML or other content types.
+
+</details>
+
 ## Start With API
 + Create and Activate Environment
     ```text
