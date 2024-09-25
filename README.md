@@ -6,6 +6,18 @@
 ## What is Serializer?
 Serializer allow complex data such as querysets and model instances to be converted to natvie python datatypes that can then be easily rendered into JSON, XML or other content types.
 
+## Steps(RestApi4):
+- Create project
+- Create app
+- Create model
+- register model into admin
+- create serializer
+- create views file to display the data into the user end
+- into the function into the urls
+
+
+
+
 </details>
 
 ## Start With API
