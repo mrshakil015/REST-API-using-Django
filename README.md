@@ -128,7 +128,7 @@ print(data)
 - The process of converting native python datatypes such as dictionaries to complex data types such as querysets is called deserializer in DRF.
 - Serializers also provide deserialization, allowing parsed data to be convertd back into complex types, after first validating the incoming data.
 
-### Insert data into model from thir party app:
+### Insert/Create data into model from third party app:
 + Create a function under the serializer class into `serializer.py` script:
     ```python
     class ApiModelSerializer(serializers.Serializer):
@@ -183,6 +183,71 @@ print(data)
     json_data = json.dumps(data)
     re = requests.post(url=URL, data = json_data)
     data = re.json()
+    print(data)
+    ```
+
+### Update model data from third party app:
++ Create a function under the serializer class into `serializer.py` script:
+    ```python
+    class ApiModelSerializer(serializers.Serializer):
+        ...........
+        ...........
+        def update(self, instance, validated_data):
+            instance.teacher_name = validated_data.get('teacher_name', instance.teacher_name)
+            instance.course_name = validated_data.get('course_name', instance.course_name)
+            instance.course_duration = validated_data.get('course_duration', instance.course_duration)
+            instance.seat = validated_data.get('seat', instance.seat)
+            
+            instance.save()
+            return instance
+    ```
++ Create a view function into the `views.py` without create new function we can include `PUT` method code under the `POST` method function:
+    ```python
+    from django.views.decorators.csrf import csrf_exempt
+    import io
+    from rest_framework.parsers import JSONParser
+    @csrf_exempt
+    def apidata_update(request):    
+        if request.method == 'PUT':
+            json_data = request.body
+            #---json to stream
+            stream = io.BytesIO(json_data)
+            #stream to python
+            pythondata = JSONParser().parse(stream)
+            id = pythondata.get('id')
+            apidata = ApiModel.objects.get(id=id)
+            serializer = ApiModelSerializer(apidata, data=pythondata, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                res = {'msg':'Successfully update data'}
+                json_data = JSONRenderer().render(res)
+                return HttpResponse(json_data, content_type='application/json')
+            json_data = JSONRenderer().render(serializer.errors)
+            return HttpResponse(json_data, content_type ='application.json')
+    ```
++ Create urls:
+    ```python
+    ..............
+    ..............
+    path('apiupdate/',views.apidata_update, name='apiupdate'),
+    ..............
+    ```
++ Create a python script `deserilizer.py` outside the project like a third party app insert the data:
+    ```python
+    import requests
+    import json
+
+    URL = "http://127.0.0.1:8000/apiupdate/"
+
+    data = {
+        'id': 2,
+        'teacher_name': 'Md. Abul',
+        'course_name': 'Web Development',
+    }
+
+    json_data = json.dumps(data)
+    r = requests.put(url=URL, data=json_data)
+    data = r.json()
     print(data)
     ```
 

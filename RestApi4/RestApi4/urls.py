@@ -8,4 +8,5 @@ urlpatterns = [
     path('apiinfo/',views.apimodel_info),
     path('apiinfo/<int:pk>',views.apimodel_instance),
     path('apicreate/',views.apidata_create, name='apicreate'),
+    path('apiupdate/',views.apidata_update, name='apiupdate'),
 ]
