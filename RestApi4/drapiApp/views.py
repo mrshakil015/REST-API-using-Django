@@ -49,7 +49,6 @@ def apidata_create(request):
         return HttpResponse(json_data, content_type ='application.json')
 
 @csrf_exempt
-@csrf_exempt
 def apidata_update(request):    
     if request.method == 'PUT':
         json_data = request.body

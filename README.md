@@ -85,6 +85,9 @@ Serializer allow complex data such as querysets and model instances to be conver
         #----Json sent to user
         return HttpResponse(json_data, content_type='application/json')
     ```
+    + `ApiModelSerializer(apidata, many=True)` creates a serializer instance that converts the queryset `apidata` into a Python data structure (like a list of dictionaries). The `many=True` argument indicates that multiple objects are being serialized.
+    + `JSONRenderer().render(serializer.data)` converts the serialized data (a Python dict) into a JSON-formatted string. The result is stored in `json_data`.
+    + `HttpResponse(json_data, content_type='application/json')` creates an HTTP response with the JSON data and specifies that the content type is `'application/json'`. This response is returned to the client (user).
 + Include Urls:
     ```python
     ..........
