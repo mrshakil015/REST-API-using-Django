@@ -49,23 +49,31 @@ def apidata_create(request):
         return HttpResponse(json_data, content_type ='application.json')
 
 @csrf_exempt
+@csrf_exempt
 def apidata_update(request):    
     if request.method == 'PUT':
         json_data = request.body
-        #---json to stream
+        # Convert json to stream
         stream = io.BytesIO(json_data)
-        #stream to python
+        # Parse stream to python data
         pythondata = JSONParser().parse(stream)
         id = pythondata.get('id')
-        apidata = ApiModel.objects.get(id=id)
-        serializer = ApiModelSerializer(apidata, data=pythondata, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            res = {'msg':'Successfully update data'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data, content_type='application/json')
-        json_data = JSONRenderer().render(serializer.errors)
-        return HttpResponse(json_data, content_type ='application.json')
+
+        # Check if object exists before updating
+        if ApiModel.objects.filter(id=id).exists():
+            apidata = ApiModel.objects.get(id=id)
+            serializer = ApiModelSerializer(apidata, data=pythondata, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                res = {'msg': 'Successfully updated data'}
+            else:
+                res = serializer.errors
+        else:
+            res = {'msg': 'Data not found'}
+
+        # Convert response to JSON and return
+        json_data = JSONRenderer().render(res)
+        return HttpResponse(json_data, content_type='application/json')
             
 @csrf_exempt
 def apidata_delete(request):    
