@@ -7,4 +7,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('apiinfo/',views.apimodel_info),
     path('apiinfo/<int:pk>',views.apimodel_instance),
+    path('apicreate/',views.apidata_create, name='apicreate'),
 ]
