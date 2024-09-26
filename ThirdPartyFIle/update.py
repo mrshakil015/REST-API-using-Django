@@ -4,9 +4,10 @@ import json
 URL = "http://127.0.0.1:8000/apiupdate/"
 
 data = {
-    'id': 2,
-    'teacher_name': 'Md. Abul',
-    'course_name': 'Web Development',
+    'id': 3,
+    'teacher_name': 'Tansen',
+    'course_name': 'Machine Learning',
+
 }
 
 json_data = json.dumps(data)
