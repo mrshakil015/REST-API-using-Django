@@ -6,8 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 import io
 from rest_framework.parsers import JSONParser
 
-# Create your views here.
-
 #------Reterive all data-----
 def user_info(request):
     #-------complext data
