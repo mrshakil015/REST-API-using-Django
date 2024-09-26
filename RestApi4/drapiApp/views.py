@@ -67,3 +67,21 @@ def apidata_update(request):
         json_data = JSONRenderer().render(serializer.errors)
         return HttpResponse(json_data, content_type ='application.json')
             
+@csrf_exempt
+def apidata_delete(request):    
+    if request.method == 'DELETE':
+        json_data = request.body
+        print(json_data)
+        #--json to stream
+        stream = io.BytesIO(json_data)
+        #--stream to python
+        pythondata = JSONParser().parse(stream)
+        id = pythondata.get('id')
+        if ApiModel.objects.filter(id=id).exists():
+            apidata = ApiModel.objects.get(id=id)
+            apidata.delete()
+            res = {'msg':'Successfully deleted data'}
+        else:
+            res = {'msg':'Data not found'}
+        json_data = JSONRenderer().render(res)
+        return HttpResponse(json_data, content_type='application.json')

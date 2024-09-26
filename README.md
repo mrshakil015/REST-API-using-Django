@@ -167,7 +167,7 @@ print(data)
     path('apicreate/',views.apidata_create, name='apicreate'),
     ..............
     ```
-+ Create a python script `deserilizer.py` outside the project like a third party app insert the data:
++ Create a python script `create.py` outside the project like a third party app insert the data:
     ```python
     import requests, json
 
@@ -232,7 +232,7 @@ print(data)
     path('apiupdate/',views.apidata_update, name='apiupdate'),
     ..............
     ```
-+ Create a python script `deserilizer.py` outside the project like a third party app insert the data:
++ Create a python script `update.py` outside the project like a third party app insert the data:
     ```python
     import requests
     import json
@@ -247,6 +247,56 @@ print(data)
 
     json_data = json.dumps(data)
     r = requests.put(url=URL, data=json_data)
+    data = r.json()
+    print(data)
+    ```
+
+### Delete model data from third party app:
++ Create a function into the `views.py` without create new function we can include `DELETE` method code under the `POST/PUT` method function:
+    ```python
+    from django.views.decorators.csrf import csrf_exempt
+    import io
+    from rest_framework.parsers import JSONParser
+    @csrf_exempt
+    def apidata_delete(request):    
+        if request.method == 'DELETE':
+            json_data = request.body
+            print(json_data)
+            #--json to stream
+            stream = io.BytesIO(json_data)
+            #--stream to python
+            pythondata = JSONParser().parse(stream)
+            id = pythondata.get('id')
+            if ApiModel.objects.filter(id=id).exists():
+                apidata = ApiModel.objects.get(id=id)
+                apidata.delete()
+                res = {'msg':'Successfully deleted data'}
+            else:
+                res = {'msg':'Data not found'}
+            json_data = JSONRenderer().render(res)
+            return HttpResponse(json_data, content_type='application.json')
+    ```
++ Create urls:
+    ```python
+    ..............
+    ..............
+    path('apidelete/',views.apidata_delete, name='apidelete'),
+    ..............
+    ```
++ Create a python script `delete.py` outside the project like a third party app insert the data:
+    ```python
+    import requests
+    import json
+
+    URL = "http://127.0.0.1:8000/apidelete/"
+
+    data = {
+        'id' : 5,
+    }
+    #-----Convert python data into json
+    json_data = json.dumps(data)
+    r = requests.delete(url=URL, data = json_data)
+    #-----extract
     data = r.json()
     print(data)
     ```

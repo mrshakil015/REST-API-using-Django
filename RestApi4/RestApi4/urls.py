@@ -9,4 +9,5 @@ urlpatterns = [
     path('apiinfo/<int:pk>',views.apimodel_instance),
     path('apicreate/',views.apidata_create, name='apicreate'),
     path('apiupdate/',views.apidata_update, name='apiupdate'),
+    path('apidelete/',views.apidata_delete, name='apidelete'),
 ]
