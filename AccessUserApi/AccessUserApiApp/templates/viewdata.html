@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>View Data</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="d-flex  mb-3">
+        <h2 class="m-2">Data List</h2>
+        <a href="{% url 'home' %}" class="btn btn-success m-2">Home</a>
+        <a href="{% url 'insertData' %}" class="btn btn-primary m-2">Add Data</a>
+    </div>
+    <div class="row">
+        {% for data in data_list %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ data.name }}</h5>
+                    <p class="card-text"><strong>Username:</strong> {{ data.username }}</p>
+                    <p class="card-text"><strong>Email:</strong> {{ data.email }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ data.address }}</p>
+                    {% if data.website %}
+                    <p class="card-text"><strong>Website:</strong> <a href="{{ data.website }}" target="_blank">{{ data.website }}</a></p>
+                    {% else %}
+                    <p class="card-text"><strong>Website:</strong> N/A</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
