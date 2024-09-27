@@ -11,7 +11,9 @@ urlpatterns = [
     path('api-auth/',include('rest_framework.urls')),
     path('user-info/',views.user_info),
     path('user-info/<int:pk>',views.user_instance),
-    path('user-create', views.userdata_create, name='user-create')
+    path('user-create', views.userdata_create, name='user-create'),
+    path('user-update', views.userdata_update, name='user-update'),
+    path('user-delete', views.userdata_delete, name='user-delete'),
 ]
 urlpatterns+=re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 urlpatterns+=re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

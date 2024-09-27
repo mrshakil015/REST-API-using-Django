@@ -41,3 +41,37 @@ def userdata_create(request):
             return HttpResponse(json_data, content_type = 'application/json')
         json_data = JSONRenderer().render(serializer.errors)
         return HttpResponse(json_data, content_type = 'application/json')
+
+@csrf_exempt
+def userdata_update(request):
+    if request.method == 'PUT':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        pythondata = JSONParser().parse(stream)
+        id = pythondata.get('id')
+        userdata = UsersModel.objects.get(id=id)
+        serializer = UsersModelSerializer(userdata, data = pythondata, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Successfully updated data'}
+            json_data = JSONRenderer().render(res)
+            return HttpResponse(json_data, content_type = 'application/json')
+        json_data = JSONRenderer().render(serializer.errors)
+        return HttpResponse(json_data, content_type = 'application/json')
+    
+@csrf_exempt
+def userdata_delete(request):
+    if request.method == 'DELETE':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        pythondata = JSONParser().parse(stream)
+        id = pythondata.get('id')
+        if UsersModel.objects.filter(id=id).exists():
+            userdata = UsersModel.objects.get(id=id)
+            userdata.delete()
+            res = {'msg':'Successfully deleted data'}
+        else:
+            res = {'msg':'Data not found'}
+        json_data = JSONRenderer().render(res)
+        return HttpResponse(json_data, content_type = 'application/json')
+            
