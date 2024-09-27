@@ -21,7 +21,8 @@
 
         <!-- Search Single Data with ID Input -->
         <div class="col-md-3 mb-4">
-            <form action="" method="GET" class="d-flex">
+            <form action="{% url 'viewSingleData' %}" method="POST" class="d-flex">
+                {% csrf_token %}
                 <input type="text" name="id" class="form-control mr-2" placeholder="Enter ID" required>
                 <button type="submit" class="btn btn-info">Search</button>
             </form>
@@ -29,13 +30,14 @@
 
         <!-- Delete Single Data with ID Input -->
         <div class="col-md-3 mb-4">
-            <form action="" method="POST" class="d-flex">
+            <form action="{% url 'deleteData' %}" method="POST" class="d-flex">
                 {% csrf_token %}
                 <input type="text" name="id" class="form-control mr-2" placeholder="Enter ID" required>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>
+    <p>{{data}}</p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -3,8 +3,8 @@ import requests, json
 
 # Create your views here.
 def home(request):
-    
-    return render(request,'home.html')
+    data = request.GET.get('data', '')
+    return render(request,'home.html', {'data': data})
 def viewAllData(request):
     URL = "https://userapi.rainbowitpoint.com/user-info/"
 
@@ -15,6 +15,42 @@ def viewAllData(request):
         'data_list': data_list,
     }
     return render(request,'viewdata.html',context)
+
+def viewSingleData(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        URL = f"https://userapi.rainbowitpoint.com/user-info/{id}"
+        response = requests.get(url=URL)
+        #-----extract into json
+        if(response):
+            print('if work')
+            data = response.json()
+            context = {
+                'data': data,
+            }
+            return render(request,'viewsingledata.html',context)
+        else:
+            print('else work')
+            context = {
+                'error': 'Data not found',
+            }
+            return render(request,'viewsingledata.html',context)
+
+def deleteData(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        
+        URL = f"https://userapi.rainbowitpoint.com/user-delete/"
+        
+        data = {
+            'id': id
+        }
+
+        json_data = json.dumps(data)
+        r = requests.delete(url=URL, data = json_data)
+        #-----extract into json
+        data = r.json()
+        return redirect('home')
 
 def insertData(request):
     URL = "https://userapi.rainbowitpoint.com/user-create/"
