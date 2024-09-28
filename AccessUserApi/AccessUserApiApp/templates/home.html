@@ -37,7 +37,12 @@
             </form>
         </div>
     </div>
-    <p>{{data}}</p>
+    {% if data %}
+    <div class="alert alert-warning">
+        {{ data }}
+    </div>
+{% endif %}
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

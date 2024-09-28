@@ -23,18 +23,13 @@ def viewSingleData(request):
         response = requests.get(url=URL)
         #-----extract into json
         if(response):
-            print('if work')
             data = response.json()
             context = {
                 'data': data,
             }
             return render(request,'viewsingledata.html',context)
         else:
-            print('else work')
-            context = {
-                'error': 'Data not found',
-            }
-            return render(request,'viewsingledata.html',context)
+            return redirect(f'/?data=Data is not found')
 
 def deleteData(request):
     if request.method == 'POST':
@@ -49,8 +44,13 @@ def deleteData(request):
         json_data = json.dumps(data)
         r = requests.delete(url=URL, data = json_data)
         #-----extract into json
-        data = r.json()
-        return redirect('home')
+        response_data = r.json()
+        if response_data.get('msg') == 'Successfully deleted data':
+            return redirect(f'/?data=Delete successful')
+        elif response_data.get('msg') == 'Data not found':
+            return redirect(f'/?data=Data is not found')
+        else:
+            return redirect(f'/?data=Unexpected error occurred')
 
 def insertData(request):
     URL = "https://userapi.rainbowitpoint.com/user-create/"
