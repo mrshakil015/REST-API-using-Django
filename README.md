@@ -115,7 +115,6 @@ Serializer allow complex data such as querysets and model instances to be conver
 import requests
 
 #---allocate url
-# https://jsonplaceholder.typicode.com/users
 
 URL = "http://127.0.0.1:8000/apiinfo/"
 
