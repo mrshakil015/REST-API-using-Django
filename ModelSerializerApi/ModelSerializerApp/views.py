@@ -9,7 +9,7 @@ from rest_framework.response import Response
 # from rest_framework.parsers import JSONParser
 # import io
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def user_info(request, pk=None):
     if request.method == 'GET':
         #--------Get single instance-----
@@ -27,4 +27,12 @@ def user_info(request, pk=None):
         #--python dict
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
+    
+    if request.method == 'POST':
+        serializer = UserSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Successfully insert data'}
+            return Response(res)
+        return Response(serializer.errors)
         
