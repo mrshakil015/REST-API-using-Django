@@ -58,15 +58,19 @@ def user_create(request):
 @api_view(['GET','PUT','PATCH'])
 def user_update(request, pk=None):
     if request.method == 'GET':
-        id = pk
-        if id  is not None:
-            user = UsersModel.objects.get(id=id)
+        if pk is not None:
+            try:
+                user = UsersModel.objects.get(id=pk)
+            except UsersModel.DoesNotExist:
+                return Response({'error':'Data not found'}, status=status.HTTP_404_NOT_FOUND)
             serializer = UserSerializer(user)
             return Response(serializer.data)
 
     if request.method == 'PUT':
-        id = pk
-        user = UsersModel.objects.get(id=id)
+        try:
+            user = UsersModel.objects.get(id=pk)
+        except UsersModel.DoesNotExist:
+            return Response({'error':'Data not found'}, status=status.HTTP_404_NOT_FOUND)
         serializer = UserSerializer(user,data = request.data)
         if serializer.is_valid():
             serializer.save()
@@ -75,11 +79,16 @@ def user_update(request, pk=None):
         return Response(serializer.errors)
     
     if request.method == 'PATCH':
-        id = pk
-        user = UsersModel.objects.get(id=id)
-        serializer = UserSerializer(user,data = request.data,partial=True)
+        try:
+            user = UsersModel.objects.get(id=pk)
+        except UsersModel.DoesNotExist:
+            return Response({'error': 'Data not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserSerializer(user, data=request.data, partial=True)
+
         if serializer.is_valid():
-            serializer.save()
-            res = {'msg':'Partial data updated'}
-            return Response(res)
-        return Response(serializer.errors)
+            serializer.save() 
+            return Response({
+                'msg': 'Partial data updated successfully'}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
