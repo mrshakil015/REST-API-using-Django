@@ -27,7 +27,16 @@ def user_info(request, pk=None):
         #--python dict
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
-    
+
+@api_view(['GET','POST'])
+def user_create(request):
+    if request.method == 'GET':
+        #--------Get all data--------
+        #--complex data
+        user = UsersModel.objects.all()
+        #--python dict
+        serializer = UserSerializer(user, many=True)
+        return Response(serializer.data)
     if request.method == 'POST':
         serializer = UserSerializer(data = request.data)
         if serializer.is_valid():
