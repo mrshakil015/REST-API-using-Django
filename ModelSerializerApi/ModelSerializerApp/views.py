@@ -35,4 +35,32 @@ def user_info(request, pk=None):
             res = {'msg':'Successfully insert data'}
             return Response(res)
         return Response(serializer.errors)
-        
+
+@api_view(['GET','PUT','PATCH'])
+def user_update(request, pk=None):
+    if request.method == 'GET':
+        id = pk
+        if id  is not None:
+            user = UsersModel.objects.get(id=id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+
+    if request.method == 'PUT':
+        id = pk
+        user = UsersModel.objects.get(pk=id)
+        serializer = UserSerializer(user,data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Full data updated'}
+            return Response(res)
+        return Response(serializer.errors)
+    
+    if request.method == 'PATCH':
+        id = pk
+        user = UsersModel.objects.get(pk=id)
+        serializer = UserSerializer(user,data = request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Partial data updated'}
+            return Response(res)
+        return Response(serializer.errors)
