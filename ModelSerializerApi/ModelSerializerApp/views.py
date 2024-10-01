@@ -51,7 +51,7 @@ def user_create(request):
         serializer = UserSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            res = {'msg':'Successfully insert data'}
+            res = {'message':'Successfully insert data'}
             return Response(res)
         return Response(serializer.errors)
 
