@@ -1,0 +1,73 @@
+erDiagram
+    User {
+        int id PK
+        string username
+        string email
+        string password
+    }
+
+    ProductCompanyDetails {
+        int id PK
+        string company_name
+        string company_details
+        string company_address
+        string company_contact
+        datetime created_at
+        datetime updated_at
+    }
+
+    ProductCategory {
+        int id PK
+        string category_name
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+
+    Product {
+        int id PK
+        int category_id FK
+        it company_id FK
+        string product_name
+        string description
+        string ingredients
+        decimal price
+        decimal discount
+        int quantity_in_stock
+        string image
+        bool status
+        datetime created_at
+        datetime updated_at
+    }
+
+    Order {
+        int id PK
+        int user_id FK
+        int product_id FK
+        datetime order_date
+        decimal total_amount
+        string status
+        string payment_status
+        string shipping_address
+        string billing_address
+        datetime created_at
+        datetime updated_at
+    }
+
+    EmployeesDetails {
+        int id PK
+        int user_id FK
+        string first_name
+        string last_name
+        string phone_number
+        string role
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% Relationships
+    User ||--o{ Order : "places"
+    ProductCategory ||--o{ Product : "contains"
+    Order }o--|| User : "belongs to"
+    EmployeesDetails ||--|| User : "is linked to"
